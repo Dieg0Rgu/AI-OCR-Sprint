@@ -49,6 +49,10 @@ class ExtractedImageMetadata(BaseModel):
     height: int
     file_path: str
     url: str
+    order: int = 0
+    caption: Optional[str] = None
+    section_title: Optional[str] = None
+    surrounding_text: Optional[str] = None
 
 
 class DocumentUploadResponse(BaseModel):

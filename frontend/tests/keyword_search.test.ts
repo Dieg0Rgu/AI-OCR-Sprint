@@ -82,8 +82,8 @@ describe('KeywordSearch.vue', () => {
     expect(searchSpy).toHaveBeenCalledWith('doc-123', 'atención', false, false);
 
     // Verify counter subheader
-    expect(wrapper.text()).toContain('[ COINCIDENCIA 1 DE 2');
-    expect(wrapper.text()).toContain('EN PÁG. 1');
+    expect(wrapper.text()).toContain('[ COINCIDENCIA 1 / 2 //');
+    expect(wrapper.text()).toContain('PÁG. 01');
 
     // Emits jump-to-match for the first match
     expect(wrapper.emitted('jump-to-match')).toBeTruthy();
@@ -139,18 +139,18 @@ describe('KeywordSearch.vue', () => {
 
     // Next match -> index 1 (page 3)
     await nextBtn!.trigger('click');
-    expect(wrapper.text()).toContain('[ COINCIDENCIA 2 DE 2');
-    expect(wrapper.text()).toContain('EN PÁG. 3');
+    expect(wrapper.text()).toContain('[ COINCIDENCIA 2 / 2 //');
+    expect(wrapper.text()).toContain('PÁG. 03');
 
     // Next match again -> wraps around to index 0 (page 1)
     await nextBtn!.trigger('click');
-    expect(wrapper.text()).toContain('[ COINCIDENCIA 1 DE 2');
-    expect(wrapper.text()).toContain('EN PÁG. 1');
+    expect(wrapper.text()).toContain('[ COINCIDENCIA 1 / 2 //');
+    expect(wrapper.text()).toContain('PÁG. 01');
 
     // Prev match -> wraps backwards to index 1 (page 3)
     await prevBtn!.trigger('click');
-    expect(wrapper.text()).toContain('[ COINCIDENCIA 2 DE 2');
-    expect(wrapper.text()).toContain('EN PÁG. 3');
+    expect(wrapper.text()).toContain('[ COINCIDENCIA 2 / 2 //');
+    expect(wrapper.text()).toContain('PÁG. 03');
   });
 
   it('clicking a match row selects it and emits jump-to-match', async () => {
@@ -168,7 +168,8 @@ describe('KeywordSearch.vue', () => {
     expect(rows.length).toBe(2);
 
     await rows[1].trigger('click');
-    expect(wrapper.text()).toContain('[ COINCIDENCIA 2 DE 2');
+    expect(wrapper.text()).toContain('[ COINCIDENCIA 2 / 2 //');
+    expect(wrapper.text()).toContain('PÁG. 03');
     const emitted = wrapper.emitted('jump-to-match')!;
     expect(emitted[emitted.length - 1][0]).toEqual({
       pageNumber: 3,

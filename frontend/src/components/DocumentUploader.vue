@@ -74,7 +74,7 @@
             ? 'border-swiss-accent text-swiss-accent font-bold bg-swiss-accent/5'
             : 'border-transparent text-swiss-muted'"
         >
-          [01] UPLOADED
+          [01/04] UPLOADED
         </div>
         <div
           class="p-1 border"
@@ -82,7 +82,7 @@
             ? 'border-swiss-accent text-swiss-accent font-bold bg-swiss-accent/5'
             : 'border-transparent text-swiss-muted'"
         >
-          [02] EXTRACT
+          [02/04] EXTRACTING_ALL_IMAGES
         </div>
         <div
           class="p-1 border"
@@ -90,7 +90,7 @@
             ? 'border-swiss-accent text-swiss-accent font-bold bg-swiss-accent/5'
             : 'border-transparent text-swiss-muted'"
         >
-          [03] INDEX
+          [03/04] INDEXING
         </div>
         <div
           class="p-1 border"
@@ -98,7 +98,7 @@
             ? 'border-emerald-500 text-emerald-500 font-bold bg-emerald-500/10'
             : 'border-transparent text-swiss-muted'"
         >
-          [04] READY
+          [04/04] READY
         </div>
       </div>
 

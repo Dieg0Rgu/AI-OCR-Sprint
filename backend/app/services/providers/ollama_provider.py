@@ -1,5 +1,6 @@
 import base64
 import json
+import os
 from pathlib import Path
 from typing import AsyncGenerator, List, Optional
 import httpx
@@ -176,14 +177,30 @@ class OllamaLLMProvider(OllamaClientBase, LLMProvider):
 
 
 class OllamaVisionProvider(OllamaClientBase, VisionProvider):
-    def __init__(self, base_url: Optional[str] = None, model: Optional[str] = None):
-        super().__init__(base_url=base_url)
-        self.model = model or settings.OLLAMA_VISION_MODEL
+    def __init__(
+        self,
+        base_url: Optional[str] = None,
+        model: Optional[str] = None,
+        timeout: Optional[float] = None,
+    ):
+        model_name = (
+            model
+            or os.getenv("VISION_MODEL")
+            or settings.active_vision_model
+            or "moondream"
+        )
+        vision_timeout = (
+            timeout
+            or float(os.getenv("VISION_TIMEOUT_SECONDS", str(settings.VISION_TIMEOUT_SECONDS)))
+        )
+        super().__init__(base_url=base_url, timeout=vision_timeout)
+        self.model = model_name
+        self.vision_timeout = vision_timeout
 
     @retry(
         retry=retry_if_exception_type((httpx.RequestError, httpx.HTTPStatusError)),
-        stop=stop_after_attempt(settings.OLLAMA_MAX_RETRIES),
-        wait=wait_exponential(multiplier=1, min=2, max=10),
+        stop=stop_after_attempt(settings.VISION_MAX_RETRIES),
+        wait=wait_exponential(multiplier=1, min=2, max=5),
         before_sleep=before_sleep_log(logger, 20),
         reraise=True,
     )
@@ -211,10 +228,18 @@ class OllamaVisionProvider(OllamaClientBase, VisionProvider):
         }
 
         try:
-            response = await self.client.post("/api/generate", json=payload)
+            response = await self.client.post(
+                "/api/generate",
+                json=payload,
+                timeout=httpx.Timeout(self.vision_timeout, connect=10.0),
+            )
             response.raise_for_status()
             data = response.json()
-            return data.get("response", "").strip()
+            if "response" in data:
+                return data["response"].strip()
+            elif "message" in data and "content" in data["message"]:
+                return data["message"]["content"].strip()
+            return ""
         except Exception as e:
             logger.error("Ollama vision analysis failed", extra={"model": self.model, "image": str(image_path), "error": str(e)})
             raise

@@ -10,11 +10,11 @@ router = APIRouter(prefix="/vision", tags=["Vision"])
 @router.post(
     "/query",
     response_model=VisionQueryResponse,
-    summary="Query an extracted image or chart using LLaVA 7B multimodal vision",
+    summary="Query an extracted image or chart using Moondream multimodal vision",
 )
 async def query_figure(request: VisionQueryRequest):
     """
-    Submits an extracted figure/diagram to LLaVA 7B.
+    Submits an extracted figure/diagram to Moondream.
     Detects if the answer incorporates numerical estimates from graphics
     and appends a transparent estimation warning badge.
     """

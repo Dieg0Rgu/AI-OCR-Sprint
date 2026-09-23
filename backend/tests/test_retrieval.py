@@ -20,7 +20,7 @@ async def test_bm25_and_qdrant_and_rrf_flow():
             chunk_id=f"{doc_id}_p2_c0",
             document_id=doc_id,
             page_number=2,
-            text="El modelo LLaVA 7B procesa las imágenes y diagramas para responder preguntas visuales.",
+            text="El modelo Moondream procesa las imágenes y diagramas para responder preguntas visuales.",
         ),
         DocumentChunk(
             chunk_id=f"{doc_id}_p3_c0",

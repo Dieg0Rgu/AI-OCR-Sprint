@@ -64,8 +64,8 @@
             Buscando coincidencias...
           </span>
           <span v-else-if="matches.length > 0" class="text-swiss-black dark:text-neutral-200">
-            [ COINCIDENCIA {{ activeIndex + 1 }} DE {{ matches.length }}
-            <span class="text-swiss-accent">EN PÁG. {{ currentMatch?.page_number }}</span> ]
+            [ COINCIDENCIA {{ activeIndex + 1 }} / {{ matches.length }} //
+            <span class="text-swiss-accent font-bold">PÁG. {{ String(currentMatch?.page_number || 0).padStart(2, '0') }}</span> ]
           </span>
           <span v-else class="text-swiss-muted">
             0 coincidencias encontradas

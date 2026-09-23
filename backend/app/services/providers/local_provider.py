@@ -158,7 +158,7 @@ class FallbackLLMProvider(LLMProvider):
 
 class FallbackVisionProvider(VisionProvider):
     """
-    Fallback vision analyzer when Ollama LLaVA is offline.
+    Fallback vision analyzer when Ollama Moondream is offline.
     Inspects image dimensions, format, and page location.
     """
 

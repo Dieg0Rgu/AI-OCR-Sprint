@@ -32,13 +32,22 @@ class Settings(BaseSettings):
     # Ollama Local Inference
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     OLLAMA_LLM_MODEL: str = "qwen2.5:7b"
-    OLLAMA_VISION_MODEL: str = "llava:7b"
+    OLLAMA_VISION_MODEL: str = "moondream"
     OLLAMA_EMBED_MODEL: str = "nomic-embed-text"
     OLLAMA_TIMEOUT_SECONDS: float = 60.0
     OLLAMA_MAX_RETRIES: int = 3
 
+    # Vision Specific Tuning (Moondream lightweight multimodal model)
+    VISION_MODEL: str = "moondream"
+    VISION_TIMEOUT_SECONDS: float = 30.0
+    VISION_MAX_RETRIES: int = 1
+
     # Fallbacks & Provider Preferences
     FALLBACK_EMBEDDINGS: bool = True
+
+    @property
+    def active_vision_model(self) -> str:
+        return os.getenv("VISION_MODEL") or self.VISION_MODEL or self.OLLAMA_VISION_MODEL or "moondream"
 
     # CORS
     CORS_ORIGINS: List[str] = [

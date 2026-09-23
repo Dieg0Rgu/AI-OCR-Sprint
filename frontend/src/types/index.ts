@@ -24,6 +24,10 @@ export interface ExtractedImageMetadata {
   height: number;
   file_path: string;
   url: string;
+  order?: number;
+  caption?: string | null;
+  section_title?: string | null;
+  surrounding_text?: string | null;
 }
 
 export interface DocumentDetailResponse {

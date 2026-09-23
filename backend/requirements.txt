@@ -13,3 +13,4 @@ pytesseract>=0.3.10
 fastembed>=0.2.5
 pytest>=8.0.0
 pytest-asyncio>=0.23.5
+pypdf>=4.0.0

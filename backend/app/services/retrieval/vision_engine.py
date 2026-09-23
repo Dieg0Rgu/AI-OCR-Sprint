@@ -17,13 +17,13 @@ NUMERICAL_PATTERN = re.compile(
 
 class VisionEngine:
     """
-    Multimodal visual inspection engine utilizing LLaVA 7B.
+    Multimodal visual inspection engine utilizing Moondream.
     Detects visual numerical estimations and generates warning disclosures.
     """
 
     WARNING_MESSAGE = (
         "Aviso: Esta respuesta contiene valores numéricos interpretados visualmente a partir de la "
-        "figura o gráfico mediante LLaVA 7B. Al tratarse de inferencia visual, los números representan "
+        "figura o gráfico mediante el modelo de visión Moondream. Al tratarse de inferencia visual, los números representan "
         "estimaciones aproximadas y deben contrastarse con los datos tabulares o el texto fuente del documento."
     )
 
@@ -52,15 +52,16 @@ class VisionEngine:
         vision_provider = ProviderFactory.get_vision_provider()
         vision_start = time.perf_counter()
 
-        system_instruction = (
-            f"Analiza la siguiente imagen extraída de la página {matched_image.page_number} "
-            f"del documento técnico en respuesta a la pregunta del usuario: {prompt}"
+        surrounding_text = matched_image.surrounding_text or f"Figura técnica en página {matched_image.page_number}."
+        prompt_with_context = (
+            f"Contexto textual de la página {matched_image.page_number} adyacente a la figura: "
+            f"{surrounding_text}. Pregunta del usuario: {prompt}"
         )
 
         try:
             analysis = await vision_provider.analyze_image(
                 image_path=image_path,
-                prompt=f"{system_instruction}\nPregunta: {prompt}",
+                prompt=prompt_with_context,
             )
         except Exception as e:
             logger.warning("Primary vision provider failed, falling back to local vision analyzer", extra={"error": str(e)})

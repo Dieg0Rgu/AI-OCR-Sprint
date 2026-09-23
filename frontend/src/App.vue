@@ -69,13 +69,23 @@
 
     <!-- Main Workspace: Asymmetric Swiss Split-Screen Grid (55% / 45%) -->
     <main class="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-swiss-border dark:divide-swiss-border-dark">
-      <!-- Left Panel (55%): PDF Viewer with Coordinate Overlay -->
+      <!-- Left Panel (55%): PDF Viewer with Coordinate Overlay & Collapsible Figure Gallery -->
       <section class="lg:col-span-7 h-full overflow-hidden flex flex-col bg-neutral-100 dark:bg-neutral-950">
-        <PdfViewer
-          ref="pdfViewerRef"
-          :pdf-url="pdfUrl"
-          :highlight-page="highlightPage"
-          :highlight-bbox="highlightBbox"
+        <div class="flex-1 overflow-hidden relative flex flex-col">
+          <PdfViewer
+            ref="pdfViewerRef"
+            :pdf-url="pdfUrl"
+            :highlight-page="highlightPage"
+            :highlight-bbox="highlightBbox"
+          />
+        </div>
+
+        <!-- Collapsible Editorial Figure Gallery Drawer -->
+        <FigureGallery
+          v-if="activeDoc"
+          :images="extractedImages"
+          @jump-to-figure="handleJumpToFigure"
+          @inspect-figure="handleInspectFigure"
         />
       </section>
 
@@ -154,6 +164,7 @@
       :is-open="showVisionModal"
       :document-id="activeDoc?.document_id || null"
       :images="extractedImages"
+      :initial-image-id="selectedInspectionImageId"
       @close="showVisionModal = false"
     />
   </div>
@@ -166,12 +177,14 @@ import { ApiService } from './services/api';
 import { useChat } from './composables/useChat';
 import DocumentUploader from './components/DocumentUploader.vue';
 import PdfViewer from './components/PdfViewer.vue';
+import FigureGallery from './components/FigureGallery.vue';
 import ChatPanel from './components/ChatPanel.vue';
 import KeywordSearch from './components/KeywordSearch.vue';
 import ImageInspectorModal from './components/ImageInspectorModal.vue';
 
 const showUploadModal = ref(false);
 const showVisionModal = ref(false);
+const selectedInspectionImageId = ref<string | null>(null);
 const activeRightTab = ref<'chat' | 'search'>('chat');
 
 const activeDoc = ref<DocumentDetailResponse | null>(null);
@@ -250,5 +263,16 @@ function handleJumpToMatch(payload: { pageNumber: number; bbox: number[] | null 
   highlightPage.value = payload.pageNumber;
   highlightBbox.value = payload.bbox;
   pdfViewerRef.value?.goToPage(payload.pageNumber, payload.bbox);
+}
+
+function handleJumpToFigure(payload: { pageNumber: number; bbox: number[] | null }) {
+  highlightPage.value = payload.pageNumber;
+  highlightBbox.value = payload.bbox;
+  pdfViewerRef.value?.goToPage(payload.pageNumber, payload.bbox);
+}
+
+function handleInspectFigure(image: ExtractedImageMetadata) {
+  selectedInspectionImageId.value = image.image_id;
+  showVisionModal.value = true;
 }
 </script>

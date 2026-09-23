@@ -41,6 +41,8 @@ services:
       - QDRANT_HOST=qdrant
       - QDRANT_PORT=6333
       - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_VISION_MODEL=moondream
+      - VISION_MODEL=moondream
       - STORAGE_DIR=/app/storage
       - FALLBACK_EMBEDDINGS=true
     volumes:
