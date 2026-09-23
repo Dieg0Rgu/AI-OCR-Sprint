@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans antialiased text-swiss-black dark:text-neutral-100 bg-white dark:bg-swiss-charcoal;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  ::selection {
+    background-color: #0047FF;
+    color: #FFFFFF;
+  }
+}
+
+/* Swiss Editorial 3px Flat Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #E4E4E7;
+  border-radius: 0px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #27272A;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0047FF;
+}
